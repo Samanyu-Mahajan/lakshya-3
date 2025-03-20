@@ -1,7 +1,8 @@
 import logging, datetime
 import os
+import csv
 
-from config import BASE_LOG_PATH
+from config import BASE_LOG_PATH, START_DATE
 formatter = logging.Formatter('%(asctime)s %(levelname)s, %(message)s')
 trade_formatter = logging.Formatter('%(asctime)s Trade %(message)s')
 base_path_logger = f"{BASE_LOG_PATH}"
@@ -33,6 +34,26 @@ def setup_logger(lock, name, log_file, log_formatter=formatter, level=logging.IN
 
 # current_log_path = None
 # general_logger = None
+
+
+def setup_stats_csv():
+    csv_file = f"{base_path_logger}/{START_DATE}/stats.csv"
+    if not os.path.exists(csv_file):
+        with open(csv_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                'Token', 
+                'PNL',
+                'Volume traded',
+                'Total orders',
+                'Winning trades',
+                'Daily Sharpe ratio',
+                'Annualised Sharpe ratio',
+                'Drawdown'
+            ])
+def get_csv_file_name():
+    csv_file = f"{base_path_logger}/{START_DATE}/stats.csv"
+    return csv_file
 
 
 def setup_general_logger(lock, start_date):

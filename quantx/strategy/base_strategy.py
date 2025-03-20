@@ -1,6 +1,6 @@
 import datetime
 
-from Exchange.logger import setup_logger, get_current_log_path, formatter, get_general_logger
+from Exchange.logger import setup_logger, get_current_log_path, formatter, get_general_logger, get_csv_file_name
 from Exchange.executor import Exchange, Order
 import pdb
 import numpy as np
@@ -29,6 +29,8 @@ class Strategy:
 
         current_log_path = get_current_log_path()         # quantx/logs/20250205
         self.general_logger = get_general_logger()     # quantx/logs/20250205/stdout.log
+        self.csv_file_name = get_csv_file_name()
+        self.locks = locks
         self.name = name
         self.counter = 0
         # '20250205'
@@ -292,7 +294,15 @@ class Strategy:
        
 
         # should be per instr dictionary actually   
-        assert(len(self.buy_order_prices) == len(self.sell_order_prices))
+        # assert(len(self.buy_order_prices) == len(self.sell_order_prices))
+        # print(len(self.buy_order_prices), len(self.sell_order_prices))
+
+        if(len(self.buy_order_prices) != len(self.sell_order_prices)):
+            # print("######################################################")
+            # print(self.universe)
+            # cannot process further
+            return
+
         # print(self.buy_order_prices) 
         # print(self.sell_order_prices)
         self.pnl = np.array(self.sell_order_prices)-np.array(self.buy_order_prices)
@@ -318,23 +328,47 @@ class Strategy:
         # print("equity_curve", equity_curve)
         running_max = np.maximum.accumulate(equity_curve)
         # print("running max", running_max)
-        drawdowns = np.where(running_max != 0, 
-                            (equity_curve - running_max) / running_max, 
-                            0)        
+        # drawdowns = np.where(running_max != 0, 
+        #                     (equity_curve - running_max) / running_max, 
+        #                     0)     
+        drawdowns = np.divide(
+            equity_curve - running_max,
+            running_max,
+            out=np.zeros_like(equity_curve),
+            where=running_max != 0
+        )   
         # print("drawdown", drawdowns)
         max_drawdown = np.min(drawdowns)
-
-        # Equity Curve Plot
-        # self.plot_equity_curve_and_drawdowns(equity_curve, drawdowns)
-
-
 
 
         self.general_logger.info(f"Drawdown: {max_drawdown}\n")
 
         self.general_logger.info("###############################################################################\n")
 
+        # Equity Curve Plot
+        # self.plot_equity_curve_and_drawdowns(equity_curve, drawdowns)
+            # 'token',
+            #     'PNL',
+            #     'Volume traded',
+            #     'Total orders',
+            #     'Winning trades',
+            #     'Daily Sharpe ratio',
+            #     'Annualised Sharpe ratio',
+            #     'Drawdown'
+        row = [self.universe[0], total_pnl, int(total_volume),len(self.exchange.completed_order),int(winning_trades),sharpe,sharpe_annualized, max_drawdown]
+        import csv
+        # No lock: risky in multiprocess
+        with self.locks[5]:
+            with open(self.csv_file_name, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(row)
+
+
+        
         self.eostrategy_report_build = True
+
+
+
 
 
     def on_order_update(self, order: Order):

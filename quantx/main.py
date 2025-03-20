@@ -1,6 +1,6 @@
 from config import START_DATE, END_DATE, DATA_BUILDING_DATE, UNIVERSE, DATA_LOC, NUM_TOKENS, BASE_LOG_PATH #"quantx/logs"
 
-from Exchange.logger import setup_general_logger
+from Exchange.logger import setup_general_logger, setup_stats_csv
 from Exchange.executor import Exchange
 from data_store.data_feed import DataStore
 from strategy.lakshya import CWA2SSigma
@@ -28,6 +28,7 @@ class Infinity:
           All these variables can be imported from config as well
         """
         setup_general_logger(locks[0], start_date)
+        setup_stats_csv()
         self.start_date = start_date
         self.end_date = end_date
         self.data_building_date = data_building_date
@@ -47,7 +48,7 @@ class Infinity:
         )
         end = time.time()
         # print(f"datastore: {self.universe}: {end-start}")
-
+        # self.locks = locks
         self.exchange = Exchange(locks, fill_type="ON_OPEN", log_name=self.start_date)
         # self.strategy = CWA2SSigma(self.universe, self.exchange, "lakshya", self.start_date,
         #                       self.end_date, self.data_building_date)
@@ -150,7 +151,8 @@ if __name__ == "__main__":
         # lock[2]: order_final.csv Exchange
         # lock[3]: lakshya.csv Strategy
         # lock[4]: lakshya_predictors.csv staretegy
-        for i in range(5):
+        # lock[5]: stats.csv
+        for i in range(6):
             locks.append(Lock())
         delete_logs()
         for u in UNIVERSE:

@@ -37,6 +37,7 @@ class Exchange:
 
     # log_name=self.start_date
     def __init__(self, locks, fill_type, logger="order", log_name=None):
+        self.locks = locks
         # #quantx/logs/20250205/
         current_log_path = get_current_log_path()
         self.orders = dict()
@@ -148,7 +149,7 @@ class Exchange:
                             order.fill_price = order.price
                             self.post_filled_order_checks(order, packet)
                 elif order.side == Order.SELL:
-                    if order.order_type in {Order.AGGRESSIVE, order.LIQUIDATE}:
+                    if order.order_type in {Order.AGGRESSIVE, Order.LIQUIDATE}:
                         # if packet.o >= order.price:
                         if (FILL_TYPE == "ON_OPEN"):
                             order.fill_price = packet.open  # filling at open

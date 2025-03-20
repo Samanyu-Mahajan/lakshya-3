@@ -4,11 +4,12 @@ BASE_LOG_PATH = "quantx/logs"
 START_DATE = "20250217"
 END_DATE = "20250218"
 DATA_BUILDING_DATE = "20250203"
-# UNIVERSE = ["757"] # All tokens that need to be included
+UNIVERSE = ["757"] # All tokens that need to be included
 # UNIVERSE = ["163"] # All tokens that need to be included
 # UNIVERSE = ["163", "526", "30108", "10794", "19585"]
 # UNIVERSE = [1270]
-UNIVERSE = [7]
+# ANOMALIES
+# UNIVERSE = [3010], ['3608']
 
 # UNIVERSE = ["1270", 
 # "383"]

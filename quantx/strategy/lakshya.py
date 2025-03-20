@@ -197,30 +197,30 @@ class CWA2SSigma(Strategy):
         if self.order_count >= 100:
             return
         # print(self.order_count)
-        if packet.inst not in self.inst_wise_df:
-            self.inst_wise_df[packet.inst] = list()
-        self.inst_wise_df[packet.inst].append([packet.timestamp_seconds, float(packet.open), float(packet.high),
-                                               float(packet.low), float(packet.close)])
-        data_size = len(self.inst_wise_df[packet.inst])
-        # keep the latest 300 packets
-        # what if data_size < 300 still works
-        # pdb.set_trace()
-        # max(0, data_size-300)?
-        self.inst_wise_df[packet.inst] = self.inst_wise_df[packet.inst][max(0,data_size - 300):]
-        df = pd.DataFrame(self.inst_wise_df[packet.inst], columns=["timestamp", "open", "low", "high", "close"])
+        # if packet.inst not in self.inst_wise_df:
+        #     self.inst_wise_df[packet.inst] = list()
+        # self.inst_wise_df[packet.inst].append([packet.timestamp_seconds, float(packet.open), float(packet.high),
+        #                                        float(packet.low), float(packet.close)])
+        # data_size = len(self.inst_wise_df[packet.inst])
+        # # keep the latest 300 packets
+        # # what if data_size < 300 still works
+        # # pdb.set_trace()
+        # # max(0, data_size-300)?
+        # self.inst_wise_df[packet.inst] = self.inst_wise_df[packet.inst][max(0,data_size - 300):]
+        # df = pd.DataFrame(self.inst_wise_df[packet.inst], columns=["timestamp", "open", "low", "high", "close"])
         
 
         # pdb.set_trace()
-        if data_size > 15:
+        # if data_size > 15:
             # self.calculate_predictors(df, packet.inst)
 
 
             # last_candle, signal, risk=self.calculate_predictors(df, packet.inst)
             # pdb.set_trace()
-            if self.order_count < 100:
-                # what is signal cover?
-                self.exchange.place_order(packet.inst, packet.close, "BUY", 1, signal="COVER")
-                self.order_count +=1
+        if self.order_count < 100:
+            # what is signal cover?
+            self.exchange.place_order(packet.inst, packet.close, "BUY", 1, signal="COVER")
+            self.order_count +=1
             # else:
             #     self.exchange.place_order(packet.inst, packet.close, "SELL", 1, signal="COVER")
         # no liquidation??
