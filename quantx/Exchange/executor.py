@@ -1,5 +1,6 @@
 from .logger import setup_logger, formatter, get_current_log_path
 import datetime
+from config import FILL_TYPE
 
 
 class Order:
@@ -86,7 +87,7 @@ class Exchange:
 
 # cancel all orders of packet.inst
     def cancel_pending_orders(self, packet):
-        print(f"CANCELLING ORDERS OF {packet.inst},{packet.timestamp}")
+        # print(f"CANCELLING ORDERS OF {packet.inst},{packet.timestamp}")
         orders_to_fill = self.orders.get(packet.inst, [])
         if len(orders_to_fill) > 0:
             self.orders[packet.inst] = list()
@@ -130,7 +131,16 @@ class Exchange:
                     if order.order_type in {Order.AGGRESSIVE, Order.LIQUIDATE}:
                         # if packet.o <= order.price:
                         # ON_OPEN
-                        order.fill_price = packet.open  # filling at open
+                        if (FILL_TYPE == "ON_OPEN"):
+                            order.fill_price = packet.open  # filling at open
+                        elif (FILL_TYPE == "ON_CLOSE"):
+                            order.fill_price = packet.open 
+                        elif (FILL_TYPE == "ON_HIGH"):
+                            order.fill_price = packet.high
+                        elif (FILL_TYPE == "ON_LOW"):
+                            order.fill_price = packet.low
+                        elif (FILL_TYPE == "ON_VWAP"):
+                            order.fill_price = packet.VWAP/100
                         # print("filling order", order.price, "at price", packet.open)
                         self.post_filled_order_checks(order, packet)
                     elif order.order_type == Order.LIMIT:
@@ -140,7 +150,16 @@ class Exchange:
                 elif order.side == Order.SELL:
                     if order.order_type in {Order.AGGRESSIVE, order.LIQUIDATE}:
                         # if packet.o >= order.price:
-                        order.fill_price = packet.open  # filling at open
+                        if (FILL_TYPE == "ON_OPEN"):
+                            order.fill_price = packet.open  # filling at open
+                        elif (FILL_TYPE == "ON_CLOSE"):
+                            order.fill_price = packet.open 
+                        elif (FILL_TYPE == "ON_HIGH"):
+                            order.fill_price = packet.high
+                        elif (FILL_TYPE == "ON_LOW"):
+                            order.fill_price = packet.low
+                        elif (FILL_TYPE == "ON_VWAP"):
+                            order.fill_price = packet.VWAP/100
                         self.post_filled_order_checks(order, packet)
                     elif order.order_type == Order.LIMIT:
                         # if packet.h >= order.price and packet.l >= order.price:

@@ -21,6 +21,7 @@ class CWA2SSigma(Strategy):
         self.start_trading = False
         self.inst_map = dict()  # keep , returns, ltp here
         self.mode = StrategyModes.INTERDAY
+        # self.mode = StrategyModes.INTRADAY
         # print("mode:", self.mode)
         self.inst_wise_triggers = dict()
         self.inst_wide_risk = dict()
@@ -155,15 +156,41 @@ class CWA2SSigma(Strategy):
 
         packet_date = packet.timestamp_seconds.date()  # Get the date part
         packet_time = packet.timestamp_seconds.time()
+
+        # print(packet.timestamp_seconds)
+
         if self.prev_date is None or packet_date != self.prev_date:
             # It's a new day
             self.order_count = 0
             self.prev_date = packet_date
+            # uncomment this if you want every day reports
             self.report_build=False
         # interday stragy no liquidation
+        end_date_obj = datetime.datetime.strptime(self.end_date, "%Y%m%d").date()
+        # packet date is moving 1 day ahead of enddate or startdate
+
+        if packet_time > self.liquidation_time:
+            # if intraday then liquidate
+            if (self.mode == StrategyModes.INTRADAY): 
+                if packet.inst in self.position and self.position[packet.inst]["quantity"] != 0:
+                    self.exchange.cancel_pending_orders(packet)
+                    self.liquidate(packet)
+            # if interday then liquidate at last day
+            else:
+                if (packet_date == end_date_obj + datetime.timedelta(days=1)) :
+                    if packet.inst in self.position and self.position[packet.inst]["quantity"] != 0:
+                        self.exchange.cancel_pending_orders(packet)
+                        self.liquidate(packet)
+    
         if packet_time >= self.report_building_time:
-            # print("building eod report for", packet_date)
-            self.build_eod_report()
+            # uncomment to build eod reports
+            # self.build_eod_report(packet_date)
+            if packet_date == end_date_obj + datetime.timedelta(days=1):
+                self.build_eostrategy_report()
+                # pass
+
+
+
 
 
 

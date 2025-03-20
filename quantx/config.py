@@ -2,12 +2,14 @@ DATA_LOC = "quantx/data"
 BASE_LOG_PATH = "quantx/logs"
 
 START_DATE = "20250217"
-END_DATE = "20250217"
-DATA_BUILDING_DATE = "20250217"
-UNIVERSE = ["757"] # All tokens that need to be included
+END_DATE = "20250218"
+DATA_BUILDING_DATE = "20250203"
+# UNIVERSE = ["757"] # All tokens that need to be included
 # UNIVERSE = ["163"] # All tokens that need to be included
 # UNIVERSE = ["163", "526", "30108", "10794", "19585"]
 # UNIVERSE = [1270]
+UNIVERSE = [7]
+
 # UNIVERSE = ["1270", 
 # "383"]
 # UNIVERSE = ["1270", 
@@ -20,10 +22,12 @@ UNIVERSE = ["757"] # All tokens that need to be included
 # "19585",    
 # "1901" ,    
 # "21174"]
-FILL_TYPE=["ON_OPEN"] # ON_OPEN, ON_CLOSE, ON_VWAP
+# onclose , onopen, onlow,onhigh and onvwap
+FILL_TYPE="ON_OPEN" 
 # keep as zero if universe is defined
 # else top num_tokens tokens will comprise the universe
-NUM_TOKENS = 0
+# still need to define universe as anything arbitrary coz it will be overwritten
+NUM_TOKENS = 100
 
 
 # 163      [21915, orders]

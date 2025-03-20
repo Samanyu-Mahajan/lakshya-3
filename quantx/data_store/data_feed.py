@@ -26,6 +26,7 @@ class DataStore:
         self.data_path = data_path
         self.universe = universe
         self.counter = 0
+        # has ohlc as np.float 64
         self.mkt_data = None
         self.max_length = 0
         self.reader(build_data, all_data)

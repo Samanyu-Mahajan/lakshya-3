@@ -71,7 +71,6 @@ class Infinity:
 
             if(packet.close==-0.01):
                 continue
-            # print(packet.timestamp_seconds)
             
             # print("packet: ##################################################### ", cnt_packets+1)
             # print(packet.open, packet.close)
