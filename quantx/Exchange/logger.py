@@ -36,8 +36,9 @@ def setup_logger(lock, name, log_file, log_formatter=formatter, level=logging.IN
 # general_logger = None
 
 
-def setup_stats_csv():
-    csv_file = f"{base_path_logger}/{START_DATE}/stats.csv"
+def setup_stats_csv(update_time_gap_seconds):
+    global csv_file 
+    csv_file = f"{base_path_logger}/{START_DATE}/{update_time_gap_seconds}/stats.csv"
     if not os.path.exists(csv_file):
         with open(csv_file, mode='w', newline='') as file:
             writer = csv.writer(file)
@@ -47,19 +48,17 @@ def setup_stats_csv():
                 'Volume traded',
                 'Total orders',
                 'Winning trades',
-                'Daily Sharpe ratio',
                 'Annualised Sharpe ratio',
                 'Drawdown'
             ])
 def get_csv_file_name():
-    csv_file = f"{base_path_logger}/{START_DATE}/stats.csv"
     return csv_file
 
 
-def setup_general_logger(lock, start_date):
+def setup_general_logger(lock, start_date, update_time_gap_seconds):
     global current_log_path, general_logger
     # 
-    current_log_path = f"{base_path_logger}/{start_date}"#quantx/logs/20250205/
+    current_log_path = f"{base_path_logger}/{start_date}/{update_time_gap_seconds}"#quantx/logs/20250205/5/
     
     try:
         pass

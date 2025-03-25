@@ -1,0 +1,3 @@
+2025-03-25 11:54:54,093 INFO, id, order_time, order_timestamp, fill_time, fill_timestamp, price, inst, side, status, quantity, fill_price, order_type, signal
+2025-03-25 11:54:54,332 INFO, 0, 1424253106008537566, 2015-02-18 09:51:46, None, None, 486.5, 1270, SELL, PENDING, 1,0, AGGRESSIVE, 
+2025-03-25 11:54:54,342 INFO, 1, 1424253199000479504, 2015-02-18 09:53:19, None, None, 484.6, 1270, BUY, PENDING, 1,0, AGGRESSIVE, 

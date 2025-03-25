@@ -82,4 +82,35 @@ class DataStore:
         current_packet = self.mkt_data.iloc[self.counter]
         self.counter += 1
         return current_packet
+    
+
+
+
+    def fetch_candle(self, instrument, from_dt, to_dt, tf):
+
+        df = self.mkt_data
+
+        # Filter between from_dt and to_dt
+        mask = (df['inst'] == instrument) & (df['timestamp_seconds'] >= from_dt) & (df['timestamp_seconds'] < to_dt)
+        df_filtered = df.loc[mask][['timestamp_seconds', 'open', 'high', 'low', 'close']]
+        df_filtered = df_filtered[df_filtered['close'] != -0.01]
+        df_filtered = df_filtered.set_index('timestamp_seconds')
+        df_filtered.index.name = 'datetime'
+
+
+        if df_filtered.empty:
+            return pd.DataFrame()
+
+        # Resample to candles
+        resampled = df_filtered.resample(tf).agg({
+            'open': 'first',
+            'high': 'max',
+            'low': 'min',
+            'close': 'last'
+        }).dropna()
+
+        resampled.reset_index(inplace=True)
+
+        return resampled
+
 

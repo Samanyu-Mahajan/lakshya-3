@@ -1,6 +1,8 @@
 from .logger import setup_logger, formatter, get_current_log_path
 import datetime
 from config import FILL_TYPE
+import pandas as pd
+
 
 
 class Order:
@@ -23,7 +25,10 @@ class Order:
         self.fill_price = 0
         self.order_type = order_type  # AGGRESSIVE, LIMIT
         self.order_time = None
+        self.order_timestamp = None
         self.fill_time = None
+        self.fill_timestamp = None
+        self.signal = ""
 
 # exchange has logger: pending placed orderd and fill_logger: filled orders
 class Exchange:
@@ -51,7 +56,7 @@ class Exchange:
         # #quantx/logs/20250205/20250205_order_final.csv
         self.fill_logger = setup_logger(locks[2], f"fill_logger_{log_name}",
                                         f"{current_log_path}/{log_name}_order_final.csv", formatter)
-        log_headers = "id, order_time, fill_time, price, inst, side, status, quantity, fill_price, order_type, signal"
+        log_headers = "id, order_time, order_timestamp, fill_time, fill_timestamp, price, inst, side, status, quantity, fill_price, order_type, signal"
         self.logger.info(log_headers)
         self.fill_logger.info(log_headers)
         self.current_time = None
@@ -60,7 +65,7 @@ class Exchange:
 
 #  if order pending the log it in self.logger else log it in self.fill_logger
     def log_order(self, order):
-        log_line = (f"{order.id}, {order.order_time}, {order.fill_time}, {order.price}, {order.inst}, {order.side},"
+        log_line = (f"{order.id}, {order.order_time}, {order.order_timestamp}, {order.fill_time}, {order.fill_timestamp}, {order.price}, {order.inst}, {order.side},"
                     f" {order.status}, {order.quantity},{order.fill_price}, {order.order_type}, {order.signal}")
         if order.status == "PENDING":
             self.logger.info(log_line)
@@ -79,12 +84,14 @@ class Exchange:
         # time something like 1423214124878024234
         # what is this?
         order.order_time = self.current_time
+        order.order_timestamp = pd.to_datetime(order.order_time // 10**9, unit='s')
         order.order_type = order_type
         order.signal = signal
         # order pending logged to self.logger 
         self.log_order(order)
         self.orders[inst].append(order)
         self.counter +=1
+        return self.counter-1
 
 # cancel all orders of packet.inst
     def cancel_pending_orders(self, packet):
@@ -100,6 +107,7 @@ class Exchange:
 
     def post_filled_order_checks(self, order, packet):
         order.fill_time = self.current_time
+        order.fill_timestamp = pd.to_datetime(order.fill_time // 10**9, unit='s')
         order.status = Order.FILLED
         self.raise_order_update(order)
         self.completed_order.append(order)

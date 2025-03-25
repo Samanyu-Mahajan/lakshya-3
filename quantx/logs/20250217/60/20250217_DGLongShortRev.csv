@@ -1,0 +1,13 @@
+2025-03-25 11:55:05,212 INFO, inst,timestamp,timestamp, position,pnl
+2025-03-25 11:55:05,303 INFO, Long condition met
+2025-03-25 11:55:05,310 INFO, Short condition met
+2025-03-25 11:55:05,316 INFO, Long condition met
+2025-03-25 11:55:05,322 INFO, Target hit on LONG side
+2025-03-25 11:55:05,383 INFO, Short condition met
+2025-03-25 11:55:05,389 INFO, Target hit on SHORT side
+2025-03-25 11:55:05,498 INFO, Long condition met
+2025-03-25 11:55:05,505 INFO, Target hit on LONG side
+2025-03-25 11:55:05,554 INFO, Long condition met
+2025-03-25 11:55:05,560 INFO, Target hit on LONG side
+2025-03-25 11:55:05,610 INFO, Short condition met
+2025-03-25 11:55:05,622 INFO, Target hit on SHORT side

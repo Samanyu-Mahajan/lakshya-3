@@ -2,12 +2,12 @@ DATA_LOC = "quantx/data"
 BASE_LOG_PATH = "quantx/logs"
 
 START_DATE = "20250217"
-END_DATE = "20250218"
+END_DATE = "20250217"
 DATA_BUILDING_DATE = "20250203"
-UNIVERSE = ["757"] # All tokens that need to be included
-# UNIVERSE = ["163"] # All tokens that need to be included
+# UNIVERSE = ["757"] # All tokens that need to be included
+# UNIVERSE = [163] # All tokens that need to be included
 # UNIVERSE = ["163", "526", "30108", "10794", "19585"]
-# UNIVERSE = [1270]
+UNIVERSE = [1270]
 # ANOMALIES
 # UNIVERSE = [3010], ['3608']
 
@@ -28,7 +28,8 @@ FILL_TYPE="ON_OPEN"
 # keep as zero if universe is defined
 # else top num_tokens tokens will comprise the universe
 # still need to define universe as anything arbitrary coz it will be overwritten
-NUM_TOKENS = 100
+NUM_TOKENS = 0
+TIMER_TIME_SECONDS = 60
 
 
 # 163      [21915, orders]
@@ -48,3 +49,5 @@ NUM_TOKENS = 100
 # 19585    21553
 # 1901     21508
 # 21174    21350
+
+

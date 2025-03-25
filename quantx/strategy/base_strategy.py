@@ -53,10 +53,11 @@ class Strategy:
         # pdb.set_trace()
         self.last_pnl_update_time = None
         self.position = dict()  # {"HDFCBANK":{"quantity":10, "avg_buy":100}}
-        headers = "inst,timestamp,position,pnl"
+        headers = "inst,timestamp,timestamp, position,pnl"
+        self.logger.info(headers)
+
 
         self.liquidation_time = datetime.time(15, 16)  # time to start liquidating intraday strats, default
-        self.logger.info(headers)
         self.mode = StrategyModes.INTRADAY
         self.start_time = datetime.time(9, 15)
         self.inst_live_pnl_map = dict()
@@ -134,9 +135,9 @@ class Strategy:
 
 
         # # log_file: quantx/logs/20250205/20250205_lakshya.csv
-        log_line = f"{inst},{packet.timestamp},{self.position[inst]['quantity']},{pnl}"
+        log_line = f"{inst},{packet.timestamp},{packet.timestamp_seconds}, {self.position[inst]['quantity']},{pnl}"
         # print(log_line)
-        self.logger.info(f"{inst},{packet.timestamp},{self.position[inst]['quantity']},{pnl}")
+        self.logger.info(log_line)
         # pdb.set_trace()
         # if packet.inst.name_inst == "BANDHANBNK":
         #     print(self.inst_live_pnl_map[packet.inst], packet.inst)
@@ -284,6 +285,7 @@ class Strategy:
         self.general_logger.info(f"########################## End of startegy report for {self.universe}#####################################\n")
         total_pnl = 0
         # pdb.set_trace()
+        # print("positions", self.position)
         for key, value in self.position.items():
             # quantity =0 because positions are liquidated.
             inst_pnl = value['avg_sell'] - value['avg_buy']
@@ -298,26 +300,31 @@ class Strategy:
         # print(len(self.buy_order_prices), len(self.sell_order_prices))
 
         if(len(self.buy_order_prices) != len(self.sell_order_prices)):
-            # print("######################################################")
-            # print(self.universe)
+            print("######################################################")
+            print(self.universe)
+            print(len(self.buy_order_prices), len(self.sell_order_prices))
             # cannot process further
+            self.eostrategy_report_build = True
+
             return
 
-        # print(self.buy_order_prices) 
-        # print(self.sell_order_prices)
+        # print("buy", self.buy_order_prices) 
+        # print("sell", self.sell_order_prices)
         self.pnl = np.array(self.sell_order_prices)-np.array(self.buy_order_prices)
-        
+        # print("pnl", self.pnl)
         winning_trades = 0
         for i in range(len(self.pnl)):
             if (self.pnl[i]> 0):
                 winning_trades+=1
         self.general_logger.info(f"Winning Trades:{winning_trades}\n")
 
-
-        sharpe = np.mean(self.pnl) / np.std(self.pnl)
+        if len(self.pnl) == 0 or np.std(self.pnl) == 0:
+            sharpe = np.nan  # or set to 0, depending on your preference
+        else:
+            sharpe = np.mean(self.pnl) / np.std(self.pnl)
         sharpe_annualized = sharpe * np.sqrt(252)
-        self.general_logger.info(f"Sharpe daily:{sharpe}, Sharpe Annually: {sharpe_annualized}\n")
-
+        self.general_logger.info(f"Sharpe Annually: {sharpe_annualized}\n")
+ 
         total_volume = len(self.buy_order_prices)*2
         self.general_logger.info(f"Total volume traded: total quanity buys + sells: {total_volume}\n")
 
@@ -338,8 +345,10 @@ class Strategy:
             where=running_max != 0
         )   
         # print("drawdown", drawdowns)
-        max_drawdown = np.min(drawdowns)
-
+        if len(drawdowns) == 0:
+            max_drawdown = np.nan  # or set to 0, depending on your use case
+        else:
+            max_drawdown = np.min(drawdowns)
 
         self.general_logger.info(f"Drawdown: {max_drawdown}\n")
 
@@ -355,7 +364,7 @@ class Strategy:
             #     'Daily Sharpe ratio',
             #     'Annualised Sharpe ratio',
             #     'Drawdown'
-        row = [self.universe[0], total_pnl, int(total_volume),len(self.exchange.completed_order),int(winning_trades),sharpe,sharpe_annualized, max_drawdown]
+        row = [self.universe[0], total_pnl, int(total_volume),len(self.exchange.completed_order),int(winning_trades),sharpe_annualized, max_drawdown]
         import csv
         # No lock: risky in multiprocess
         with self.locks[5]:
@@ -374,6 +383,7 @@ class Strategy:
     def on_order_update(self, order: Order):
         # print("inside on_order_update")
         # pdb.set_trace()
+        # print(self.universe)
         if order.inst not in self.position:
             self.position[order.inst] = {"quantity": 0, "avg_sell": 0, "total_sell": 0, "total_buy": 0,
                                          "avg_buy": 0}
@@ -413,4 +423,4 @@ class Strategy:
                                       order_type=Order.LIQUIDATE)
         elif self.position[inst]["quantity"] < 0:
             self.exchange.place_order(inst, packet.close, "BUY", abs(self.position[inst]["quantity"]),
-                                      order_type=Order.LIQUIDATE)
+                                      order_type=Order.LIQUIDATE)()
