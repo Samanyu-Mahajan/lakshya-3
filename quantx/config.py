@@ -28,8 +28,8 @@ FILL_TYPE="ON_OPEN"
 # keep as zero if universe is defined
 # else top num_tokens tokens will comprise the universe
 # still need to define universe as anything arbitrary coz it will be overwritten
-NUM_TOKENS = 0
-TIMER_TIME_SECONDS = 60
+NUM_TOKENS = 2
+TIMER_TIME_SECONDS = 5
 
 
 # 163      [21915, orders]

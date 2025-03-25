@@ -3,7 +3,7 @@
 ./run.sh
 ```
 The logs will be updated in quantx/logs/{date}/{time_gap}
-default time gap in seconds after which update(on_timer) function is called is 60s (TIMER_TIME_SECONDS = 60). can be changed in CONFIG. 
+default time gap in seconds after which update(on_timer) function is called is 5s (TIMER_TIME_SECONDS = 5). can be changed in CONFIG. 
 To pass it as a command line argument, update ./run.sh (add the $1)
 ```
 python3 quantx/main.py "$1"

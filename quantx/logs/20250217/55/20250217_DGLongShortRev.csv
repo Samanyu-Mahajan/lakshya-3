@@ -1,7 +1,18 @@
-2025-03-25 11:55:01,589 INFO, inst,timestamp,timestamp, position,pnl
-2025-03-25 11:55:01,682 INFO, Long condition met
-2025-03-25 11:55:01,688 INFO, Short condition met
-2025-03-25 11:55:01,763 INFO, Short condition met
-2025-03-25 11:55:01,769 INFO, Target hit on SHORT side
-2025-03-25 11:55:03,082 INFO, Short condition met
-2025-03-25 11:55:03,088 INFO, Target hit on SHORT side
+2025-03-25 13:37:03,933 INFO, inst,timestamp,timestamp, position,pnl
+2025-03-25 13:37:04,036 INFO, Long condition met
+2025-03-25 13:37:04,042 INFO, Short condition met
+2025-03-25 13:37:04,129 INFO, Short condition met
+2025-03-25 13:37:04,136 INFO, Target hit on SHORT side
+2025-03-25 13:37:04,353 INFO, inst,timestamp,timestamp, position,pnl
+2025-03-25 13:37:04,425 INFO, Long condition met
+2025-03-25 13:37:04,438 INFO, Target hit on LONG side
+2025-03-25 13:37:04,458 INFO, Long condition met
+2025-03-25 13:37:04,464 INFO, Target hit on LONG side
+2025-03-25 13:37:04,566 INFO, Long condition met
+2025-03-25 13:37:04,573 INFO, Target hit on LONG side
+2025-03-25 13:37:04,664 INFO, Long condition met
+2025-03-25 13:37:04,680 INFO, Target hit on LONG side
+2025-03-25 13:37:05,506 INFO, Long condition met
+2025-03-25 13:37:05,513 INFO, Target hit on LONG side
+2025-03-25 13:37:05,574 INFO, Short condition met
+2025-03-25 13:37:05,580 INFO, Target hit on SHORT side
