@@ -2,6 +2,7 @@
 ```
 ./run.sh
 ```
+Add data folder with file quantx/data/20250217/nsemd_NSECM_1_20250217.csv
 The logs will be updated in quantx/logs/{date}/{time_gap}
 default time gap in seconds after which update(on_timer) function is called is 5s (TIMER_TIME_SECONDS = 5). can be changed in CONFIG. 
 To pass it as a command line argument, update ./run.sh (add the $1)
