@@ -153,7 +153,7 @@ class Exchange:
                         # print("filling order", order.price, "at price", packet.open)
                         self.post_filled_order_checks(order, packet)
                     elif order.order_type == Order.LIMIT:
-                        if packet.l <= order.price:
+                        if packet.low <= order.price:
                             order.fill_price = order.price
                             self.post_filled_order_checks(order, packet)
                 elif order.side == Order.SELL:
@@ -172,7 +172,7 @@ class Exchange:
                         self.post_filled_order_checks(order, packet)
                     elif order.order_type == Order.LIMIT:
                         # if packet.h >= order.price and packet.l >= order.price:
-                        if packet.h >= order.price:
+                        if packet.high >= order.price:
 
                             order.fill_price = order.price
                             self.post_filled_order_checks(order, packet)
