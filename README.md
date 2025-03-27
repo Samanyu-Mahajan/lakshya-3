@@ -19,3 +19,8 @@ To run for time gaps in [5,10,15... 60] run ./run_loop.sh with the updated ./run
 ```
 In cofig if you want to run for a particular universe then set UNIVERSE and set NUM_TOKENS = 0.
 If NUM_TOKENS is non zero it will obtain the universe as the top NUM_TOKENS tokens with highest number of packets and ignore the UNIVERSE specified in config
+
+for time gap in [5,10 .. 60] plot a pnl vs time gap graph for each token as one colored line graph
+```
+python3/quantx/analysis.py
+```
